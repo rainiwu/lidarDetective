@@ -9,6 +9,7 @@
 ## Prerequisites
 1. pthread
 2. udev
+
 Prerequisites can be installed on Ubuntu using the following command:
 `apt -y install libudev-dev libpthread-stubs0-dev`
 
