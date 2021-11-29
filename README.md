@@ -5,7 +5,6 @@
 ## File Structure
 * `hdr` - Header files
 * `src` - Source files
-* `dep` - Third party dependencies
 
 ## Build Instructions
 1. Create new build directory in project root
