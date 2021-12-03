@@ -15,7 +15,7 @@ public:
   Lidar &operator=(const Lidar &aCopy) = delete;
   ~Lidar();
 
-  std::array<bool, GRID_SIZE> &getGrid();
+  const std::array<bool, GRID_SIZE> &getGrid();
 
 private:
   std::unique_ptr<std::array<bool, GRID_SIZE>> myGrid;
