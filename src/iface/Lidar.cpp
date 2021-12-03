@@ -3,7 +3,7 @@
 namespace LiDet {
 
 Lidar::Lidar() : myCmdPort() {
-  myGrid = std::make_unique<std::vector<bool>>(256);
+  myGrid = std::make_unique<std::array<bool, GRID_SIZE>>();
   myLidar = std::make_unique<LiPkg>();
   initLidar();
 }
@@ -39,6 +39,6 @@ bool Lidar::initLidar() {
   return 1;
 }
 
-std::vector<bool> &Lidar::getGrid() { return *myGrid; }
+std::array<bool, GRID_SIZE> &Lidar::getGrid() { return *myGrid; }
 
 } // namespace LiDet

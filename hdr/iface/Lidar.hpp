@@ -1,10 +1,11 @@
 #ifndef Lidar_h
 #define Lidar_h
 
+#include "Common.h"
 #include "dep/cmd_interface_linux.h"
 #include "dep/lipkg.h"
+#include <array>
 #include <memory>
-#include <vector>
 
 namespace LiDet {
 class Lidar {
@@ -14,10 +15,10 @@ public:
   Lidar &operator=(const Lidar &aCopy) = delete;
   ~Lidar();
 
-  std::vector<bool> &getGrid();
+  std::array<bool, GRID_SIZE> &getGrid();
 
 private:
-  std::unique_ptr<std::vector<bool>> myGrid;
+  std::unique_ptr<std::array<bool, GRID_SIZE>> myGrid;
   std::unique_ptr<LiPkg> myLidar;
   CmdInterfaceLinux myCmdPort;
 
