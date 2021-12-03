@@ -11,8 +11,11 @@ public:
   Drive &operator=(const Drive &aCopy);
   ~Drive();
 
-  void setThrottle();
-  void setSteering();
+  void setThrottle(const float &aValue);
+  void setSteering(const float &aValue);
+
+  const float &getThrottle();
+  const float &getSteering();
 
 protected:
   float throttle = DEFAULT_THROTTLE;
