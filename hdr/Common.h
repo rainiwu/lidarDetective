@@ -2,7 +2,8 @@
 #define Common_h
 
 #define CONSTANT 30
-#define GRID_SIZE 256
+#define LIDAR_VALS 360
+#define CONF_THRESH 100
 #define DEFAULT_THROTTLE 1100
 #define DEFAULT_STEERING 1000
 

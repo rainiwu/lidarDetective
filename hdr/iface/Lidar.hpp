@@ -5,18 +5,11 @@
 #include "dep/cmd_interface_linux.h"
 #include "dep/lipkg.h"
 #include <array>
+#include <cstdint>
 #include <memory>
+#include <thread>
 
 namespace LiDet {
-
-struct LiGrid : public std::array<bool, GRID_SIZE> {
-  const bool &getValue(const size_t &x, const size_t &y) {
-    return (*this)[x + y * GRID_SIZE];
-  }
-  inline void setValue(const bool &aValue, const size_t &x, const size_t &y) {
-    (*this)[x + y * GRID_SIZE] = aValue;
-  }
-};
 
 class Lidar {
 public:
@@ -25,14 +18,17 @@ public:
   Lidar &operator=(const Lidar &aCopy) = delete;
   ~Lidar();
 
-  const LiGrid &getGrid();
+  void graph(std::ostream &aStream);
 
-private:
-  std::unique_ptr<LiGrid> myGrid;
+protected:
   std::unique_ptr<LiPkg> myLidar;
+  std::array<uint16_t, LIDAR_VALS> myData;
+  std::thread lidarLoop;
   CmdInterfaceLinux myCmdPort;
 
+  bool endThread = false;
   bool initLidar();
+  void updateData();
 };
 } // namespace LiDet
 

@@ -3,12 +3,17 @@
 namespace LiDet {
 
 Lidar::Lidar() : myCmdPort() {
-  myGrid = std::make_unique<LiGrid>();
   myLidar = std::make_unique<LiPkg>();
   initLidar();
+  lidarLoop = std::thread(&Lidar::updateData, this);
+  lidarLoop.detach();
 }
 
-Lidar::~Lidar() {}
+Lidar::~Lidar() {
+  endThread = true;
+  lidarLoop.join();
+  endThread = false;
+}
 
 bool Lidar::initLidar() {
 
@@ -36,9 +41,32 @@ bool Lidar::initLidar() {
   if (myCmdPort.Open(port_name))
     std::cout << "LiDAR_LD06 started successfully " << std::endl;
 
-  return 1;
+  return EXIT_SUCCESS;
 }
 
-const LiGrid &Lidar::getGrid() { return *myGrid; }
+void Lidar::graph(std::ostream &aStream) {
+
+  for (int i = 10000; i > 0; i -= 250) {
+    for (int j = 0; j < 360; j += 3) {
+      if (myData[j] > i)
+        aStream << "1";
+      else
+        aStream << " ";
+    }
+    aStream << '\n';
+  }
+}
+
+void Lidar::updateData() {
+  while (!endThread) {
+    if (myLidar->IsPkgReady()) {
+      for (auto lidarVal : myLidar->GetPkgData()) {
+        if (lidarVal.confidence >= CONF_THRESH)
+          myData[(uint16_t)lidarVal.angle] = lidarVal.distance;
+      }
+      myLidar->ResetFrameReady();
+    }
+  }
+}
 
 } // namespace LiDet
