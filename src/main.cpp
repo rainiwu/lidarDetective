@@ -35,12 +35,21 @@ int main(int argc, char **argv) {
   if (cmd_port.Open(port_name))
     std::cout << "LiDAR_LD06 started successfully " << std::endl;
 
+  std::vector<int> distances = std::vector<int>(360);
+
   while (true) {
     if (lidar->IsPkgReady()) {
-      if (lidar->GetPkgData()[0].angle <= 1.0) {
-        std::cout << lidar->GetPkgData()[0].distance
-                  << "                      \t\r" << std::flush;
+      for (auto lidarVal : lidar->GetPkgData()) {
+        // std::cout << lidarVal.angle << ": " << lidarVal.distance << "\n";
+        distances[(int)lidarVal.angle] = lidarVal.distance;
       }
+      for (int i = 0; i < 360; i += 45) {
+        std::cout << "angle: " << i << ": " << distances[i] << std::endl;
+      }
+      // if (lidar->GetPkgData()[0].angle <= 1.0) {
+      //   std::cout << lidar->GetPkgData()[0].distance
+      //             << "                      \t\r" << std::flush;
+      // }
       lidar->ResetFrameReady();
     }
   }
