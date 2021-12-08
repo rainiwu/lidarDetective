@@ -13,7 +13,10 @@
 #define ROBOT_STRL 2 // steer left
 #define ROBOT_STRR 3 // steer right
 
-#define SAVE_QTAB 1 // save qtable on exit?
+// qtable options
+#define QTAB_SAVE 1 // save qtable on exit?
+#define QTAB_LOAD 1 // load qtable on start?
+#define QTAB_FILE "qtable.txt"
 
 // lidar graph values
 #define GRAPH_DIST 1000
