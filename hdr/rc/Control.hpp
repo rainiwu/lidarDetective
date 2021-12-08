@@ -1,6 +1,9 @@
 #ifndef Control_hpp
 #define Control_hpp
 
+#include "Common.h"
+#include "iface/Lidar.hpp"
+#include "rc/Robot.hpp"
 #include <curand.h>
 #include <curand_kernel.h>
 
@@ -19,6 +22,10 @@ public:
   void start();
 
 protected:
+  // I/O classes
+  Robot myRobot;
+  Lidar myLidar;
+
   // state weighting table on device
   float *dQtable = nullptr;
   // cuda random state
