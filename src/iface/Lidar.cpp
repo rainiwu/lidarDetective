@@ -16,7 +16,6 @@ Lidar::~Lidar() {
 }
 
 bool Lidar::initLidar() {
-
   std::vector<std::pair<std::string, std::string>> device_list;
   std::string port_name;
   myCmdPort.GetCmdDevices(device_list);
@@ -44,12 +43,15 @@ bool Lidar::initLidar() {
   return EXIT_SUCCESS;
 }
 
-void Lidar::graph(std::ostream &aStream) {
+inline const std::array<uint16_t, LIDAR_VALS> &Lidar::getData() {
+  return myData;
+}
 
-  for (int i = 10000; i > 0; i -= 250) {
-    for (int j = 0; j < 360; j += 3) {
+void Lidar::graph(std::ostream &aStream) {
+  for (int i = GRAPH_DIST; i > 0; i -= GRAPH_DIST / GRAPH_ROWS) {
+    for (int j = 0; j < LIDAR_VALS; j += LIDAR_VALS / GRAPH_COLS) {
       if (myData[j] > i)
-        aStream << "1";
+        aStream << GRAPH_CHAR;
       else
         aStream << " ";
     }

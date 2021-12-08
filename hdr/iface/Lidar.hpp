@@ -11,6 +11,9 @@
 
 namespace LiDet {
 
+/** Lidar provides access to onboard LiDAR values
+ * Spawns a child thread which continually updates the myData array
+ */
 class Lidar {
 public:
   Lidar();
@@ -18,6 +21,7 @@ public:
   Lidar &operator=(const Lidar &aCopy) = delete;
   ~Lidar();
 
+  const std::array<uint16_t, LIDAR_VALS> &getData();
   void graph(std::ostream &aStream);
 
 protected:

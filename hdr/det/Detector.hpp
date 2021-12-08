@@ -9,7 +9,7 @@ public:
   Detector &operator=(const Detector &aCopy);
   ~Detector();
 
-private:
+protected:
 };
 } // namespace LiDet
 
