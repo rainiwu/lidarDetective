@@ -2,6 +2,8 @@
 #define Drive_h
 
 #include "Common.h"
+#include "dep/JHPWMPCA9685.h"
+#include <iostream>
 
 namespace LiDet {
 class Drive {
@@ -18,8 +20,9 @@ public:
   const float &getSteering();
 
 protected:
-  float throttle = DEFAULT_THROTTLE;
-  float steering = DEFAULT_STEERING;
+  float throttle = THROTTLE_NEUTRAL;
+  float steering = STEERING_NEUTRAL;
+  PCA9685 *pca9685;
 };
 } // namespace LiDet
 

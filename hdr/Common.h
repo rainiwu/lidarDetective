@@ -4,8 +4,16 @@
 #define CONSTANT 30
 #define LIDAR_VALS 360
 #define CONF_THRESH 100
-#define DEFAULT_THROTTLE 1100
-#define DEFAULT_STEERING 1000
+
+// pwm values
+#define THROTTLE_NEUTRAL 350
+#define THROTTLE_FORWARD 390
+#define THROTTLE_REVERSE 310
+#define STEERING_NEUTRAL 400
+#define STEERING_LEFT 290
+#define STEERING_RIGHT 510
+#define THROTTLE_PIN 2
+#define STEERING_PIN 1
 
 // rl algo actions
 #define ROBOT_THUP 0 // throttle up
