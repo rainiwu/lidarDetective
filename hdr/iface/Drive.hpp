@@ -9,7 +9,7 @@ namespace LiDet {
 class Drive {
 public:
   Drive();
-  Drive(const Drive &aCopy);
+  Drive(const Drive &aCopy) = delete;
   Drive &operator=(const Drive &aCopy);
   ~Drive();
 
@@ -20,8 +20,8 @@ public:
   const float &getSteering();
 
 protected:
-  float throttle = THROTTLE_NEUTRAL;
-  float steering = STEERING_NEUTRAL;
+  float throttle = 0.0;
+  float steering = 0.0;
   PCA9685 *pca9685;
 };
 } // namespace LiDet

@@ -12,17 +12,17 @@ namespace LiDet {
 class Robot {
 public:
   Robot();
-  Robot(const Robot &aCopy);
-  Robot &operator=(const Robot &aCopy);
+  Robot(const Robot &aCopy) = delete;
+  Robot &operator=(const Robot &aCopy) = delete;
   ~Robot();
 
   // perform action
   void operator()(uint8_t action);
 
 protected:
-  Drive myDrive();
-  uint8_t delta_throt = 10;
-  uint8_t delta_steer = 10;
+  Drive myDrive;
+  float delta_throt = 0.03;
+  float delta_steer = 0.03;
 
   void throtUp();
   void throtDn();
