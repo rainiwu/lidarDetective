@@ -9,9 +9,10 @@
 ## Prerequisites
 1. pthread
 2. udev
+3. CUDA
 
 Prerequisites can be installed on Ubuntu using the following command:
-`apt -y install libudev-dev libpthread-stubs0-dev`
+`apt -y install libudev-dev libpthread-stubs0-dev nvidia-cuda-toolkit`
 
 ## Build Instructions
 1. Create new build directory in project root
