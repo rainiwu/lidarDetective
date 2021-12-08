@@ -10,9 +10,10 @@
 1. pthread
 2. udev
 3. CUDA
+4. i2c
 
 Prerequisites can be installed on Ubuntu using the following command:
-`apt -y install libudev-dev libpthread-stubs0-dev nvidia-cuda-toolkit`
+`apt -y install libudev-dev libpthread-stubs0-dev nvidia-cuda-toolkit libi2c-dev i2c-tools`
 
 ## Build Instructions
 1. Create new build directory in project root
