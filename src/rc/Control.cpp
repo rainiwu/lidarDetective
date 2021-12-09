@@ -86,28 +86,26 @@ void Control::control() {
 }
 
 void Control::saveQtable() {
-  auto data = std::array<float, (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION>();
-  cudaMemcpy(&data[0], dQtable,
-             sizeof(float) * (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION,
+  auto dataSize = (size_t)pow(NUM_STATES, NUM_REGIONS) * NUM_ACTION;
+  auto data = std::vector<float>(dataSize);
+  cudaMemcpy(&data[0], dQtable, sizeof(float) * dataSize,
              cudaMemcpyDeviceToHost);
   // write data to file defined by QTAB_FILE
   std::ofstream outfile;
   outfile.open(QTAB_FILE, std::ofstream::binary);
-  outfile.write((const char *)&data[0],
-                (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION * sizeof(float));
+  outfile.write((const char *)&data[0], dataSize * sizeof(float));
   outfile.close();
 }
 
 void Control::loadQtable() {
-  auto data = std::array<float, (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION>();
+  auto dataSize = (size_t)pow(NUM_STATES, NUM_REGIONS) * NUM_ACTION;
+  auto data = std::vector<float>(dataSize);
   // load data from file defined by QTAB_FILE
   std::ifstream infile;
   infile.open(QTAB_FILE, std::ifstream::binary);
-  infile.read((char *)&data[0],
-              (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION * sizeof(float));
+  infile.read((char *)&data[0], dataSize * sizeof(float));
 
-  cudaMemcpy(dQtable, &data[0],
-             sizeof(float) * (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION,
+  cudaMemcpy(dQtable, &data[0], sizeof(float) * dataSize,
              cudaMemcpyDeviceToHost);
 }
 
