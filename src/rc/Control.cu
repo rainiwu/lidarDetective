@@ -35,10 +35,10 @@ __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   avg = sum / (REG_NV - offset);
   int stateSize = LIDAR_MAX_V / NUM_STATES;
   // assumes target is exactly half of max v
-  for (int i = 0; i < NUM_STATES; i++) {
-    if (avg < stateSize * i) {
-      states[tid] = i + 1;
-      printf("current state for region %d is %d\n", tid, i + 1);
+  for (int i = 1; i <= NUM_STATES; i++) {
+    if (avg <= stateSize * i) {
+      states[tid] = i;
+      printf("current state for region %d is %d\nstateSize is %d and avg is %d\n", tid, i, stateSize*i, avg);
       return;
     }
   }
