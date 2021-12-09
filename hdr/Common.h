@@ -27,6 +27,9 @@
 // rl configuration
 #define NUM_REGIONS 10
 #define NUM_STATES 5
+#define CTR_STATE 3 //middle point of num states
+#define MAX_WING 2
+
 // maximum lidar value
 #define LIDAR_MAX_V 10000
 
