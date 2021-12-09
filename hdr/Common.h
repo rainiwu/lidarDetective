@@ -2,7 +2,6 @@
 #define Common_h
 
 #define CONSTANT 30
-#define LIDAR_VALS 360
 #define CONF_THRESH 100
 
 // pwm values
@@ -37,6 +36,11 @@
 #define LIDAR_MAX_V 2000
 // target lidar value
 #define LIDAR_TGT_V 1000
+#define LIDAR_VALS 360
+// divisor describing number of divs
+#define LIDAR_DIV 5
+// location of follow target
+#define LIDAR_CENT 0
 
 // qtable options
 #define QTAB_SAVE 1 // save qtable on exit?

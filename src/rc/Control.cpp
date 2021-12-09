@@ -56,7 +56,8 @@ void Control::stop() {
 void Control::control() {
   while (false == stopFlag) {
     // get data from myLidar
-    cudaMemcpy(dLaserDat, &myLidar.getData()[0], sizeof(uint16_t) * LIDAR_VALS,
+    cudaMemcpy(dLaserDat, &myLidar.getData()[LIDAR_CENT],
+               sizeof(uint16_t) * (LIDAR_VALS / LIDAR_DIV),
                cudaMemcpyHostToDevice);
     cudaDeviceSynchronize();
     // transform myLidar data into state
@@ -69,7 +70,8 @@ void Control::control() {
     myRobot(*hAction);
 
     // determine next state
-    cudaMemcpy(dLaserDat, &myLidar.getData()[0], sizeof(uint16_t) * LIDAR_VALS,
+    cudaMemcpy(dLaserDat, &myLidar.getData()[LIDAR_CENT],
+               sizeof(uint16_t) * (LIDAR_VALS / LIDAR_DIV),
                cudaMemcpyHostToDevice);
     calcState(dLaserDat, dNState);
 

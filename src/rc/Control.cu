@@ -1,6 +1,9 @@
 #include "rc/Control.cuh"
 #include <cstdio>
 
+// region number of values
+#define REG_NV (LIDAR_VALS / LIDAR_DIV) / NUM_REGIONS
+
 __device__ int qtableAccessor(uint8_t *state) {
   int qtableIndex = 0;
   for (int i = 0; i < NUM_REGIONS; i++)
@@ -16,9 +19,9 @@ __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   int sum = 0;
   int offset = 0;
   int avg, tmp;
-  for (size_t i = 0; i < LIDAR_VALS / NUM_REGIONS; i++) {
+  for (size_t i = 0; i < REG_NV; i++) {
     // iterate through region
-    tmp = laserDat[tid * NUM_REGIONS + i];
+    tmp = laserDat[tid * REG_NV + i];
     // if bad value, discard
     if (0 == tmp || LIDAR_MAX_V < tmp) {
       tmp = 0;
@@ -27,7 +30,7 @@ __global__ void findState(uint16_t *laserDat, uint8_t *states) {
     sum += tmp;
   }
   // avg of region is sum / numvals
-  avg = sum / ((LIDAR_VALS / NUM_REGIONS) - offset);
+  avg = sum / (REG_NV - offset);
   int stateSize = LIDAR_MAX_V / NUM_STATES;
   // assumes target is exactly half of max v
   for (int i = 0; i < NUM_STATES; i++) {
