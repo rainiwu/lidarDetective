@@ -25,7 +25,7 @@
 #define PWM_DELAY 250
 
 // rl configuration
-#define NUM_REGIONS 10
+#define NUM_REGIONS 3
 #define NUM_STATES 5
 #define CTR_STATE 3 // middle point of num states
 #define MAX_WING 2
@@ -44,8 +44,8 @@
 
 // qtable options
 #define QTAB_SAVE 1 // save qtable on exit?
-#define QTAB_LOAD 1 // load qtable on start?
-#define QTAB_FILE "qtable.txt"
+#define QTAB_LOAD 0 // load qtable on start?
+#define QTAB_FILE "qtable.bin.v1"
 
 // lidar graph values
 #define GRAPH_DIST 1000
