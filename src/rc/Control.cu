@@ -9,15 +9,15 @@
 __device__ int qtableAccessor(uint8_t *state) {
   int qtableIndex = 0;
   for (int i = 0; i < NUM_REGIONS; i++)
-    qtableIndex += state[i] * (NUM_STATES ^ i);
+    qtableIndex += state[i] * pow(NUM_STATES, i);
   return qtableIndex * 4;
 }
 
 __device__ void qtableDeacc(int index, uint8_t *outarray) {
   for (int i = NUM_REGIONS - 1; i >= 0; i--) {
     for (int j = NUM_STATES - 1; j >= 0; j--) {
-      if (index > j * (NUM_STATES ^ i)) {
-        index = index - (j * (NUM_STATES ^ i));
+      if (index > j * pow(NUM_STATES, i)) {
+        index = index - (j * pow(NUM_STATES, i));
         outarray[i] = j;
       }
     }
@@ -86,10 +86,10 @@ __global__ void deviceUpdate(float *qtable, uint8_t *cstate, uint8_t *nstate,
   int qtNIdx = qtableAccessor(nstate) + maxA;
 
   if (0 == *reward)
-    qtable[qtCIdx] += ((*reward + DISC_FACT * qtable[qtNIdx] - qtable[qtCIdx]) /
+    qtable[qtCIdx] += ((*reward + DISC_FACT * qtable[qtNIdx] - qtable[qtCIdx]) *
                        LEARN_RATE_DIV);
   else
-    qtable[qtCIdx] += (*reward - qtable[qtCIdx]) / LEARN_RATE_DIV;
+    qtable[qtCIdx] += (*reward - qtable[qtCIdx]) * LEARN_RATE_DIV;
 }
 
 void agentUpdate(float *qtable, uint8_t *cstate, uint8_t *nstate, float *reward,
@@ -169,13 +169,12 @@ __global__ void initQtable(float *qtable) {
   uint8_t state[NUM_REGIONS];
   qtableDeacc(stateindex, (uint8_t *)&state);
   if (state[NUM_REGIONS / 2] < CTR_STATE) {
-    printf("in here");
     switch (action) {
     case ROBOT_THUP:
-      qtable[tid] = -1;
+      qtable[tid] = -10;
       return;
     case ROBOT_THDN:
-      qtable[tid] = 1;
+      qtable[tid] = 10;
       return;
     default:
       qtable[tid] = 0;
@@ -184,10 +183,10 @@ __global__ void initQtable(float *qtable) {
   } else if (state[NUM_REGIONS / 2] > CTR_STATE) {
     switch (action) {
     case ROBOT_THUP:
-      qtable[tid] = 1;
+      qtable[tid] = 10;
       return;
     case ROBOT_THDN:
-      qtable[tid] = -1;
+      qtable[tid] = -10;
       return;
     default:
       qtable[tid] = 0;
@@ -196,7 +195,16 @@ __global__ void initQtable(float *qtable) {
   }
   qtable[tid] = 0;
 }
+
+__global__ void printQTable(float* qtable){
+  for (int i = 0; i < pow(NUM_STATES, NUM_REGIONS) * NUM_ACTION; i++) {
+    printf("%d: %f\n", i, qtable[i]);
+  }
+}
 void initvals(float *qtable) {
-  size_t qtabSize = (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION;
+  size_t qtabSize = pow(NUM_STATES, NUM_REGIONS) * NUM_ACTION;
+  printf("qtabsize %d\n", (int) qtabSize);
   initQtable<<<qtabSize / 64, 64>>>(qtable);
+  printQTable<<<1,1>>>(qtable);
+  cudaDeviceSynchronize();
 }

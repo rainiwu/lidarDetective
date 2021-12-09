@@ -4,6 +4,7 @@
 namespace LiDet {
 
 Control::Control() {
+  // initvals(dQtable);
   size_t stateSize = (NUM_STATES ^ NUM_REGIONS);
   size_t qtabSize = stateSize * NUM_ACTION;
 
@@ -94,6 +95,7 @@ void Control::saveQtable() {
   outfile.open(QTAB_FILE, std::ofstream::binary);
   outfile.write((const char *)&data[0],
                 (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION * sizeof(float));
+  outfile.close();
 }
 
 void Control::loadQtable() {

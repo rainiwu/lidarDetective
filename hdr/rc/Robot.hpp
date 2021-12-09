@@ -23,8 +23,8 @@ public:
 
 protected:
   Drive myDrive;
-  float delta_throt = 0.05;
-  float delta_steer = 0.05;
+  float delta_throt = 0.02;
+  float delta_steer = 0.00;
 
   void throtUp();
   void throtDn();

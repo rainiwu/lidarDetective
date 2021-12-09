@@ -15,7 +15,7 @@
 #define STEERING_PIN 1
 
 // rl algo actions
-#define NUM_ACTION 4 // only first four actions used
+#define NUM_ACTION 2 // only first four actions used
 #define ROBOT_THUP 0 // throttle up
 #define ROBOT_THDN 1 // throttle down
 #define ROBOT_STRL 2 // steer left
@@ -25,23 +25,23 @@
 #define PWM_DELAY 250
 
 // rl configuration
-#define NUM_REGIONS 3
-#define NUM_STATES 5
-#define CTR_STATE 3 // middle point of num states
+#define NUM_REGIONS 1
+#define NUM_STATES 9
+#define CTR_STATE 5 // middle point of num states
 #define MAX_WING 2
 #define DISC_FACT 0.9     // discount factor
-#define LEARN_RATE_DIV 10 // learning rate divisor
-#define EPSILON 0.9
+#define LEARN_RATE_DIV 0 // learning rate divisor
+#define EPSILON 0
 
 // maximum lidar value
-#define LIDAR_MAX_V 2000
+#define LIDAR_MAX_V 4000
 // target lidar value
-#define LIDAR_TGT_V 1000
-#define LIDAR_VALS 720
+#define LIDAR_TGT_V 2000
+#define LIDAR_VALS 1080
 // divisor describing number of divs
-#define LIDAR_DIV 5
+#define LIDAR_DIV 12
 // location of follow target
-#define LIDAR_CENT 0
+#define LIDAR_CENT 750
 
 // qtable options
 #define QTAB_SAVE 1 // save qtable on exit?

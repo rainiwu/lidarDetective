@@ -21,8 +21,8 @@ Drive::~Drive() {
 }
 
 void Drive::setThrottle(const float &aValue) {
+  std::cout << "Throttle: " << aValue << "\n";
   if (aValue < -1.0 || aValue > 1.0) {
-    std::cout << "Throttle value out of bounds" << std::endl;
     return;
   }
   throttle = aValue;
@@ -46,8 +46,8 @@ void Drive::setThrottle(const float &aValue) {
 }
 
 void Drive::setSteering(const float &aValue) {
+  std::cout << "Steering: " << aValue << "\n";
   if (aValue < -1.0 || aValue > 1.0) {
-    std::cout << "Steering value out of bounds" << std::endl;
     return;
   }
   steering = aValue;

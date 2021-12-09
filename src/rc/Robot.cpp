@@ -2,9 +2,15 @@
 
 namespace LiDet {
 
-Robot::Robot() {}
+Robot::Robot() {
+    throtStop();
+    steerStraight();
+}
 
-Robot::~Robot() {}
+Robot::~Robot() {
+    throtStop();
+    steerStraight();
+}
 
 void Robot::operator()(uint8_t action) {
     switch (action) {
@@ -33,10 +39,12 @@ void Robot::operator()(uint8_t action) {
 }
 
 void Robot::throtUp() {
-    myDrive.setThrottle(myDrive.getThrottle() + delta_throt);
+    // myDrive.setThrottle(myDrive.getThrottle() + delta_throt);
+    myDrive.setThrottle(0.2);
 }
 void Robot::throtDn() {
-    myDrive.setThrottle(myDrive.getThrottle() - delta_throt);
+    // myDrive.setThrottle(myDrive.getThrottle() - delta_throt);
+    myDrive.setThrottle(-0.2);
 }
 void Robot::steerLf() {
     myDrive.setSteering(myDrive.getSteering() + delta_steer);
