@@ -8,9 +8,6 @@
 // get states from Lidar data
 void calcState(uint16_t *laserDat, uint8_t *states);
 
-int qtableAccessor(uint8_t *state);
-float max(float a, float b);
-
 // update qtable
 void agentUpdate(float *qtable, uint8_t *cstate, uint8_t *nstate, float *reward,
                  uint8_t *action);

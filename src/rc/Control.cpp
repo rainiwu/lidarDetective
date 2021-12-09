@@ -10,7 +10,7 @@ Control::Control() {
   cudaMalloc((void **)&dQtable, sizeof(float) * qtabSize);
   cudaMalloc((void **)&dAction, sizeof(uint8_t));
   cudaMalloc((void **)&dRandState, sizeof(curandState));
-  cudaMalloc((void **)&dReward, sizeof(float));
+  cudaMalloc((void **)&dReward, sizeof(float) * NUM_REGIONS);
 
   cudaMalloc((void **)&dCState, sizeof(uint8_t) * stateSize);
   cudaMalloc((void **)&dNState, sizeof(uint8_t) * stateSize);

@@ -7,7 +7,7 @@ __device__ int qtableAccessor(uint8_t *state) {
   return qtableIndex * 4;
 }
 
-int max(int a, int b) { return (a > b) ? a : b; }
+__device__ int myMax(int a, int b) { return (a > b) ? a : b; }
 
 __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   // parallelized by region - tid is region num
@@ -41,21 +41,50 @@ void calcState(uint16_t *laserDat, uint8_t *states) {
   findState<<<1, NUM_REGIONS>>>(laserDat, states);
 }
 
-void agentUpdate(float *qtable, uint8_t *cstate, uint8_t *nstate, float *reward,
-                 uint8_t *action) {}
+__global__ void deviceUpdate(float *qtable, uint8_t *cstate, uint8_t *nstate,
+                             float *reward, uint8_t *action) {
+  short maxA = 0;
+  float nMaxVal = qtable[qtableAccessor(nstate) + maxA];
+  for (int i = 0; i < NUM_ACTION; i++) {
+    if (qtable[qtableAccessor(nstate) + i] > nMaxVal) {
+      maxA = i;
+      nMaxVal = qtable[qtableAccessor(nstate) + i];
+    }
+  }
+  // qtable CState index
+  int qtCIdx = qtableAccessor(cstate) + *action;
+  // qtable maxA NState index
+  int qtNIdx = qtableAccessor(nstate) + maxA;
 
-void agentAction(float *qtable, uint8_t *cstate, uint8_t *action) {
+  if (0 == *reward)
+    qtable[qtCIdx] += ((*reward + DISC_FACT * qtable[qtNIdx] - qtable[qtCIdx]) /
+                       LEARN_RATE_DIV);
+  else
+    qtable[qtCIdx] += (*reward - qtable[qtCIdx]) / LEARN_RATE_DIV;
+}
+
+void agentUpdate(float *qtable, uint8_t *cstate, uint8_t *nstate, float *reward,
+                 uint8_t *action) {
+  deviceUpdate<<<1, 1>>>(qtable, cstate, nstate, reward, action);
+}
+
+__global__ void deviceAction(float *qtable, uint8_t *cstate, uint8_t *action) {
   int qtableIndex = qtableAccessor(cstate);
   float currMax = qtable[qtableIndex];
+  int newMax = 0;
   uint8_t currGuess = 0;
   for (int i = 0; i < 4; i++) {
-    newMax = max(currMax, qtable[qtableIndex + i]);
+    newMax = myMax(currMax, qtable[qtableIndex + i]);
     if (newMax > currMax) {
       currMax = newMax;
       currGuess = (uint8_t)i;
     }
   }
   *action = currGuess;
+}
+
+void agentAction(float *qtable, uint8_t *cstate, uint8_t *action) {
+  deviceAction<<<1, 1>>>(qtable, cstate, action);
 }
 
 __global__ void getReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
@@ -73,8 +102,19 @@ __global__ void getReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
   }
 }
 
+// avg out reward, store into first value of reward
+__global__ void avgReward(float *reward) {
+  float sum = 0;
+  for (int i = 0; i < NUM_REGIONS; i++) {
+    sum += reward[i];
+  }
+  reward[0] = sum / NUM_REGIONS;
+}
+
 void agentReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
+  // TODO make sure this is not bad;
   getReward<<<1, NUM_REGIONS>>>(cstate, nstate, reward);
+  avgReward<<<1, 1>>>(reward);
 }
 
 __global__ void initQtable(float *qtable) {

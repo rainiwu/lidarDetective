@@ -30,6 +30,8 @@
 #define NUM_STATES 5
 #define CTR_STATE 3 // middle point of num states
 #define MAX_WING 2
+#define DISC_FACT 0.9     // discount factor
+#define LEARN_RATE_DIV 10 // learning rate divisor
 
 // maximum lidar value
 #define LIDAR_MAX_V 2000
