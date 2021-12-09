@@ -4,6 +4,8 @@
 #include "Common.h"
 #include <cstdint>
 #include <cuda_runtime.h>
+#include <stdlib.h>
+#include <math.h>
 
 // get states from Lidar data
 void calcState(uint16_t *laserDat, uint8_t *states);
