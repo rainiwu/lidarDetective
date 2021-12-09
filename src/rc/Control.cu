@@ -1,17 +1,14 @@
 #include "rc/Control.cuh"
 
-int qtableAccessor(uint8_t *state) {
-    int qtableIndex = 0;
-    for (int i = 0; i < NUM_REGIONS; i++) {
-        qtableIndex += state[i] * (int) pow(NUM_STATES,i);
-    }
-    return qtableIndex * 4;
-}
-int max(int a, int b) {
-    return (a > b) ? a : b;
+__device__ int qtableAccessor(uint8_t *state) {
+  int qtableIndex = 0;
+  for (int i = 0; i < NUM_REGIONS; i++)
+    qtableIndex += state[i] * (NUM_STATES ^ i);
+  return qtableIndex * 4;
 }
 
-void calcState(uint16_t *laserDat, uint8_t *states) {}
+int max(int a, int b) { return (a > b) ? a : b; }
+
 __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   // parallelized by region - tid is region num
   int tid = threadIdx.x + blockIdx.x * blockDim.x;
@@ -48,9 +45,8 @@ void agentUpdate(float *qtable, uint8_t *cstate, uint8_t *nstate, float *reward,
                  uint8_t *action) {}
 
 void agentAction(float *qtable, uint8_t *cstate, uint8_t *action) {
-    int qtableIndex = qtableAccessor(cstate);
-    float currMax = qtable[qtableIndex];
-    for (int i = 0; i < 4)
+  int qtableIndex = qtableAccessor(cstate);
+  float currMax = qtable[qtableIndex];
 }
 
 __global__ void getReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
