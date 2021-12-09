@@ -5,6 +5,7 @@
 #include "iface/Lidar.hpp"
 #include "rc/Control.cuh"
 #include "rc/Robot.hpp"
+#include <cuda.h>
 #include <curand.h>
 #include <curand_kernel.h>
 

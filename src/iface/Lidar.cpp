@@ -43,9 +43,7 @@ bool Lidar::initLidar() {
   return EXIT_SUCCESS;
 }
 
-inline const std::array<uint16_t, LIDAR_VALS> &Lidar::getData() {
-  return myData;
-}
+const std::array<uint16_t, LIDAR_VALS> &Lidar::getData() { return myData; }
 
 void Lidar::graph(std::ostream &aStream) {
   for (int i = GRAPH_DIST; i > 0; i -= GRAPH_DIST / GRAPH_ROWS) {

@@ -19,6 +19,6 @@ void agentAction(float *qtable, uint8_t *cstate, uint8_t *action);
 void agentReward(uint8_t *cstate, uint8_t *nstate, float *reward);
 
 // initialize values
-void initvals(uint8_t *dQtable);
+void initvals(float *qtable);
 
 #endif

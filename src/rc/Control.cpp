@@ -1,4 +1,6 @@
 #include "rc/Control.hpp"
+#include <cuda_runtime.h>
+
 namespace LiDet {
 
 Control::Control() {
@@ -20,8 +22,8 @@ Control::Control() {
 
   if (QTAB_LOAD)
     loadQtable();
-  // else
-  // clearQtable();
+  else
+    initvals(dQtable);
 }
 
 Control::~Control() {
@@ -77,5 +79,8 @@ void Control::control() {
     agentUpdate(dQtable, dCState, dNState, dReward, dAction);
   }
 }
+
+void Control::saveQtable() { throw "todo"; }
+void Control::loadQtable() { throw "todo"; }
 
 } // namespace LiDet
