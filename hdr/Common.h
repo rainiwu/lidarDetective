@@ -23,6 +23,7 @@
 #define ROBOT_STRR 3 // steer right
 #define ROBOT_STRAIGHT 4
 #define ROBOT_STOP 5
+#define PWM_DELAY 250
 
 // rl configuration
 #define NUM_REGIONS 10
