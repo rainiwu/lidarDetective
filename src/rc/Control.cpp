@@ -5,7 +5,7 @@ namespace LiDet {
 
 Control::Control() {
   // initvals(dQtable);
-  size_t stateSize = (NUM_STATES ^ NUM_REGIONS);
+  size_t stateSize = pow(NUM_STATES, NUM_REGIONS);
   size_t qtabSize = stateSize * NUM_ACTION;
 
   cudaMalloc((void **)&dQtable, sizeof(float) * qtabSize);
