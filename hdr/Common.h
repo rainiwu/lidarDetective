@@ -2,7 +2,7 @@
 #define Common_h
 
 #define CONSTANT 30
-#define CONF_THRESH 100
+#define CONF_THRESH 10
 
 // pwm values
 #define THROTTLE_NEUTRAL 350
@@ -36,7 +36,7 @@
 #define LIDAR_MAX_V 2000
 // target lidar value
 #define LIDAR_TGT_V 1000
-#define LIDAR_VALS 360
+#define LIDAR_VALS 720
 // divisor describing number of divs
 #define LIDAR_DIV 5
 // location of follow target

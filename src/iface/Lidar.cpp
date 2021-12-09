@@ -62,7 +62,8 @@ void Lidar::updateData() {
     if (myLidar->IsPkgReady()) {
       for (auto lidarVal : myLidar->GetPkgData()) {
         if (lidarVal.confidence >= CONF_THRESH)
-          myData[(uint16_t)lidarVal.angle] = lidarVal.distance;
+          myData[(uint16_t)(lidarVal.angle * LIDAR_VALS / 360)] =
+              lidarVal.distance;
       }
       myLidar->ResetFrameReady();
     }
