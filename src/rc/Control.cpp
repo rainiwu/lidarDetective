@@ -1,5 +1,6 @@
 #include "rc/Control.hpp"
 #include <cuda_runtime.h>
+#include <exception>
 
 namespace LiDet {
 
@@ -53,7 +54,12 @@ void Control::start() {
 
 void Control::stop() {
   stopFlag = true;
-  myLoop.join();
+  try {
+    myLoop.join();
+  } catch (std::exception ex) {
+    std::cout << "issue with loop join\n";
+  }
+  cudaDeviceSynchronize();
 }
 
 void Control::control() {
