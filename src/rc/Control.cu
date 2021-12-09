@@ -38,17 +38,23 @@ void agentUpdate(float *qtable, uint8_t *cstate, uint8_t *nstate, float *reward,
 
 void agentAction(float *qtable, uint8_t *cstate, uint8_t *action) {}
 
-void agentReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
-    for (int i = 0; i < NUM_REGIONS; i++) {
-        if (abs(nstate[i] - CTR_STATE) != abs(cstate[i] - CTR_STATE)) { //got either closer or farther to center state
-            reward[i] = 1.0 + log(abs(nstate[i] - cstate[i])); //minimum of 1 reward, diminishing returns after
-            if (abs(nstate[i] - CTR_STATE) > abs(cstate[i] - CTR_STATE)) { //nextstate got farther from center
-                reward[i] *= -1.0;
-            }
-        } else { //state maintained
-            reward = 0.0;
-        }
+__global__ void getReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
+  int tid = threadIdx.x + blockIdx.x * blockDim.x;
+  if (abs(nstate[tid] - CTR_STATE) != abs(cstate[tid] - CTR_STATE)) {
+    // got either closer or farther to center state
+    reward[tid] = 1.0 + log(abs(nstate[tid] - cstate[tid]));
+    // minimum of 1 reward, diminishing returns after
+    if (abs(nstate[tid] - CTR_STATE) > abs(cstate[tid] - CTR_STATE)) {
+      // nextstate got farther from center
+      reward[tid] *= -1.0;
     }
+  } else { // state maintained
+    reward[tid] = 0.0;
+  }
+}
+
+void agentReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
+  getReward<<<1, NUM_REGIONS>>>(cstate, nstate, reward);
 }
 
 __global__ void initQtable(float *qtable) {
