@@ -31,7 +31,7 @@ __global__ void init_randstate(curandState *state) {
 
 void initrand(curandState *state) { init_randstate<<<1, 1>>>(state); }
 
-__device__ int myMax(int a, int b) { return (a > b) ? a : b; }
+__device__ int myMax(float a, float b) { return (a > b) ? a : b; }
 
 __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   // parallelized by region - tid is region num
@@ -108,7 +108,7 @@ __global__ void deviceAction(float *qtable, uint8_t *cstate, uint8_t *action,
 
   int qtableIndex = qtableAccessor(cstate);
   float currMax = qtable[qtableIndex];
-  int newMax = 0;
+  float newMax = currMax;
   uint8_t currGuess = 0;
   for (int i = 0; i < 4; i++) {
     newMax = myMax(currMax, qtable[qtableIndex + i]);
@@ -162,32 +162,30 @@ __global__ void initQtable(float *qtable) {
   int action = tid % 4;
   uint8_t state[NUM_REGIONS];
   qtableDeacc(stateindex, (uint8_t *)&state);
-  for (int i = 0; i < NUM_REGIONS; i++) {
-    if (state[i] < CTR_STATE) {
-      switch (action) {
-      case ROBOT_THUP:
-        printf("state set");
-        qtable[tid] = -1;
-        return;
-      case ROBOT_THDN:
-        qtable[tid] = 1;
-        return;
-      default:
-        qtable[tid] = 0;
-        return;
-      }
-    } else if (state[i] > CTR_STATE) {
-      switch (action) {
-      case ROBOT_THUP:
-        qtable[tid] = 1;
-        return;
-      case ROBOT_THDN:
-        qtable[tid] = -1;
-        return;
-      default:
-        qtable[tid] = 0;
-        return;
-      }
+  if (state[NUM_REGIONS / 2] < CTR_STATE) {
+    printf("in here");
+    switch (action) {
+    case ROBOT_THUP:
+      qtable[tid] = -1;
+      return;
+    case ROBOT_THDN:
+      qtable[tid] = 1;
+      return;
+    default:
+      qtable[tid] = 0;
+      return;
+    }
+  } else if (state[NUM_REGIONS / 2] > CTR_STATE) {
+    switch (action) {
+    case ROBOT_THUP:
+      qtable[tid] = 1;
+      return;
+    case ROBOT_THDN:
+      qtable[tid] = -1;
+      return;
+    default:
+      qtable[tid] = 0;
+      return;
     }
   }
   qtable[tid] = 0;
