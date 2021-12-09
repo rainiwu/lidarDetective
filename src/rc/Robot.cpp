@@ -29,6 +29,7 @@ void Robot::operator()(uint8_t action) {
         default:
             break;
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds{PWM_DELAY});
 }
 
 void Robot::throtUp() {
