@@ -1,28 +1,19 @@
-#include "iface/Lidar.hpp"
-#include "iface/Drive.hpp"
-#include "rc/Robot.hpp"
+#include "rc/Control.hpp"
 #include <chrono>
 
-int main() {
-  auto test = LiDet::Lidar();
-  auto robot = LiDet::Robot();
-  for (int i = 0; i < 10; i++) {
-    robot(ROBOT_THUP);
-    std::this_thread::sleep_for(std::chrono::seconds{1});
-  }
-  for (int i = 0; i < 10; i++) {
-    robot(ROBOT_STRR);
-    std::this_thread::sleep_for(std::chrono::seconds{1});
-  }
-  robot(ROBOT_STOP);
-  robot(ROBOT_STRAIGHT);
+using namespace LiDet;
 
+int main() {
+  auto top = Control();
+  top.start();
+  auto buff = std::string("");
   while (true) {
-    test.graph(std::cout);
-    std::this_thread::sleep_for(std::chrono::seconds{1});
-    for (int i = 0; i < 50; i++)
-      std::cout << '\n';
+    std::cout << "do anything to stop" << std::endl;
+    std::cin >> buff;
+    if (buff != "")
+      break;
   }
+  top.stop();
 
   return 0;
 }
