@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <thread>
 
-
 namespace LiDet {
 /** Robot drives the car
  *
@@ -23,8 +22,8 @@ public:
 
 protected:
   Drive myDrive;
-  float delta_throt = 0.02;
-  float delta_steer = 0.00;
+  float delta_throt = THR_DELT;
+  float delta_steer = STR_DELT;
 
   void throtUp();
   void throtDn();

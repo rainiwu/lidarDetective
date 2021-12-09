@@ -23,6 +23,8 @@
 #define ROBOT_STRAIGHT 4
 #define ROBOT_STOP 5
 #define DELTA 1       // whether or not to use delta
+#define THR_DELT 0.05 // throttle delta values
+#define STR_DELT 0.05 // steering delta
 #define PWM_DELAY 100 // delay in milliseconds between each call
 
 // rl configuration
