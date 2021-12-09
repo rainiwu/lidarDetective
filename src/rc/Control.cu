@@ -117,6 +117,7 @@ __global__ void deviceAction(float *qtable, uint8_t *cstate, uint8_t *action,
       currGuess = (uint8_t)i;
     }
   }
+  printf("CurrAction: %d\ncurrMax: %f\n", *action, currMax);
   *action = currGuess;
 }
 
@@ -165,6 +166,7 @@ __global__ void initQtable(float *qtable) {
     if (state[i] < CTR_STATE) {
       switch (action) {
       case ROBOT_THUP:
+        printf("state set");
         qtable[tid] = -1;
         return;
       case ROBOT_THDN:
