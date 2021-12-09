@@ -1,5 +1,4 @@
 #include "rc/Control.cuh"
-#include <cstdlib>
 
 __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   // parallelized by region - tid is region num
@@ -42,7 +41,7 @@ __global__ void getReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
   int tid = threadIdx.x + blockIdx.x * blockDim.x;
   if (abs(nstate[tid] - CTR_STATE) != abs(cstate[tid] - CTR_STATE)) {
     // got either closer or farther to center state
-    reward[tid] = 1.0 + log(abs(nstate[tid] - cstate[tid]));
+    reward[tid] = 1.0 + abs(nstate[tid] - cstate[tid]) / NUM_STATES;
     // minimum of 1 reward, diminishing returns after
     if (abs(nstate[tid] - CTR_STATE) > abs(cstate[tid] - CTR_STATE)) {
       // nextstate got farther from center
@@ -63,5 +62,5 @@ __global__ void initQtable(float *qtable) {
 }
 void initvals(float *qtable) {
   size_t qtabSize = (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION;
-  initQtable<<<qtabSize / 64, 64>>>();
+  initQtable<<<qtabSize / 64, 64>>>(qtable);
 }
