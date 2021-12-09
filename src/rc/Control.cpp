@@ -80,7 +80,29 @@ void Control::control() {
   }
 }
 
-void Control::saveQtable() { throw "todo"; }
-void Control::loadQtable() { throw "todo"; }
+void Control::saveQtable() {
+  auto data = std::array<float, (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION>();
+  cudaMemcpy(&data[0], dQtable,
+             sizeof(float) * (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION,
+             cudaMemcpyDeviceToHost);
+  // write data to file defined by QTAB_FILE
+  std::ofstream outfile;
+  outfile.open(QTAB_FILE, std::ofstream::binary);
+  outfile.write((const char *)&data[0],
+                (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION * sizeof(float));
+}
+
+void Control::loadQtable() {
+  auto data = std::array<float, (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION>();
+  // load data from file defined by QTAB_FILE
+  std::ifstream infile;
+  infile.open(QTAB_FILE, std::ifstream::binary);
+  infile.read((char *)&data[0],
+              (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION * sizeof(float));
+
+  cudaMemcpy(dQtable, &data[0],
+             sizeof(float) * (NUM_STATES ^ NUM_REGIONS) * NUM_ACTION,
+             cudaMemcpyDeviceToHost);
+}
 
 } // namespace LiDet

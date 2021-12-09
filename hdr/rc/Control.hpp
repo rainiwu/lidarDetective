@@ -8,6 +8,7 @@
 #include <cuda.h>
 #include <curand.h>
 #include <curand_kernel.h>
+#include <fstream>
 
 namespace LiDet {
 
