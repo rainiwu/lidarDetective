@@ -20,6 +20,8 @@
 #define ROBOT_THDN 1 // throttle down
 #define ROBOT_STRL 2 // steer left
 #define ROBOT_STRR 3 // steer right
+#define ROBOT_STRAIGHT 4
+#define ROBOT_STOP 5
 
 // qtable options
 #define QTAB_SAVE 1 // save qtable on exit?

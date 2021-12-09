@@ -15,7 +15,7 @@ Drive &Drive::operator=(const Drive &aCopy) {
 
 Drive::~Drive() {
     pca9685->setPWM(THROTTLE_PIN,0,THROTTLE_NEUTRAL);
-    // pca9685->setPWM(STEERING_PIN,0,STEERING_NEUTRAL);
+    pca9685->setPWM(STEERING_PIN,0,STEERING_NEUTRAL);
     pca9685->closePCA9685();
 }
 

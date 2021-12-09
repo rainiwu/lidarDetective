@@ -21,13 +21,15 @@ public:
 
 protected:
   Drive myDrive;
-  float delta_throt = 0.03;
-  float delta_steer = 0.03;
+  float delta_throt = 0.05;
+  float delta_steer = 0.05;
 
   void throtUp();
   void throtDn();
   void steerLf();
   void steerRi();
+  void throtStop();
+  void steerStraight();
 };
 } // namespace LiDet
 
