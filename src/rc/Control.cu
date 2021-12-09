@@ -1,4 +1,5 @@
 #include "rc/Control.cuh"
+#include <cstdio>
 
 __device__ int qtableAccessor(uint8_t *state) {
   int qtableIndex = 0;
@@ -32,6 +33,7 @@ __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   for (int i = 0; i < NUM_STATES; i++) {
     if (avg < stateSize * i) {
       states[tid] = i + 1;
+      printf("current state for region %d is %d", tid, i + 1);
       return;
     }
   }
