@@ -27,11 +27,13 @@
 // rl configuration
 #define NUM_REGIONS 10
 #define NUM_STATES 5
-#define CTR_STATE 3 //middle point of num states
+#define CTR_STATE 3 // middle point of num states
 #define MAX_WING 2
 
 // maximum lidar value
-#define LIDAR_MAX_V 10000
+#define LIDAR_MAX_V 2000
+// target lidar value
+#define LIDAR_TGT_V 1000
 
 // qtable options
 #define QTAB_SAVE 1 // save qtable on exit?
