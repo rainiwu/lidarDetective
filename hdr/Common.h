@@ -26,8 +26,8 @@
 #define PWM_DELAY 100 // delay in milliseconds between each call
 
 // rl configuration
-#define NUM_REGIONS 1
-#define NUM_STATES 9 // keep at odd number!
+#define NUM_REGIONS 3 // keep at odd number!
+#define NUM_STATES 9  // keep at odd number!
 // number of states is not max state
 // e.g. NUM_STATES = 3, means states can be 0,1,2
 // middle is 1

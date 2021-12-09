@@ -13,17 +13,6 @@ __device__ int qtableAccessor(uint8_t *state) {
   return qtableIndex * 4;
 }
 
-__device__ void qtableDeacc(int index, uint8_t *outarray) {
-  for (int i = NUM_REGIONS - 1; i >= 0; i--) {
-    for (int j = NUM_STATES - 1; j >= 0; j--) {
-      if (index > j * pow(NUM_STATES, i)) {
-        index = index - (j * pow(NUM_STATES, i));
-        outarray[i] = j;
-      }
-    }
-  }
-}
-
 __global__ void init_randstate(curandState *state) {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   curand_init(clock() + tid, tid, 0, &state[tid]);
@@ -57,7 +46,7 @@ __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   // assumes target is exactly half of max v
   for (int i = 1; i <= NUM_STATES; i++) {
     if (avg <= stateSize * i) {
-      states[tid] = i;
+      states[tid] = i - 1;
       printf(
           "current state for region %d is %d\nstateSize is %d and avg is %d\n",
           tid, i, stateSize * i, avg);
@@ -147,53 +136,50 @@ __global__ void getReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
   }
 }
 
-// avg out reward, store into first value of reward
-__global__ void avgReward(float *reward) {
-  float sum = 0;
-  for (int i = 0; i < NUM_REGIONS; i++) {
-    sum += reward[i];
-  }
-  reward[0] = sum / NUM_REGIONS;
+// determine reward with policy, store into first value of reward
+__global__ void weightReward(float *reward) {
+  reward[0] = reward[NUM_REGIONS / 2];
 }
 
 void agentReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
   // TODO make sure this is not bad;
   getReward<<<1, NUM_REGIONS>>>(cstate, nstate, reward);
-  avgReward<<<1, 1>>>(reward);
+  weightReward<<<1, 1>>>(reward);
+}
+
+// returns carry flag
+// NUM_STATES - 1 is max possible value of state
+// NUM_REGIONS is length of state array
+// if at max value, does not iterate
+__device__ bool iterateState(uint8_t *state, uint8_t targetIndex) {
+  if (state[targetIndex] < NUM_STATES - 1) {
+    // iterate index if index is not max value
+    state[targetIndex]++;
+    return false;
+  } else if (state[targetIndex] == NUM_STATES - 1) {
+    // else if it is, reset current index to zero, iterate next index
+    if (targetIndex < NUM_REGIONS - 1) {
+      state[targetIndex] = 0;
+      return iterateState(state, targetIndex + 1);
+    } else {
+      // return false if at maximum state val
+      return true;
+    }
+  }
+  return true;
 }
 
 __global__ void initQtable(float *qtable) {
-  int tid = threadIdx.x + blockIdx.x * blockDim.x;
-  int stateindex = tid / 4;
-  int action = tid % 4;
-  uint8_t state[NUM_REGIONS];
-  qtableDeacc(stateindex, (uint8_t *)&state);
-  if (state[NUM_REGIONS / 2] < CTR_STATE) {
-    switch (action) {
-    case ROBOT_THUP:
-      qtable[tid] = -10;
-      return;
-    case ROBOT_THDN:
-      qtable[tid] = 10;
-      return;
-    default:
-      qtable[tid] = 0;
-      return;
+  uint8_t allstates[NUM_REGIONS];
+  do {
+    if (allstates[NUM_REGIONS / 2] > CTR_STATE) {
+      qtable[qtableAccessor(allstates) + ROBOT_THUP] = 1;
+      qtable[qtableAccessor(allstates) + ROBOT_THDN] = -1;
+    } else if (allstates[NUM_REGIONS / 2] < CTR_STATE) {
+      qtable[qtableAccessor(allstates) + ROBOT_THUP] = -1;
+      qtable[qtableAccessor(allstates) + ROBOT_THDN] = 1;
     }
-  } else if (state[NUM_REGIONS / 2] > CTR_STATE) {
-    switch (action) {
-    case ROBOT_THUP:
-      qtable[tid] = 10;
-      return;
-    case ROBOT_THDN:
-      qtable[tid] = -10;
-      return;
-    default:
-      qtable[tid] = 0;
-      return;
-    }
-  }
-  qtable[tid] = 0;
+  } while (iterateState(allstates, 0) != true);
 }
 
 __global__ void printQTable(float *qtable) {
@@ -202,9 +188,7 @@ __global__ void printQTable(float *qtable) {
   }
 }
 void initvals(float *qtable) {
-  size_t qtabSize = pow(NUM_STATES, NUM_REGIONS) * NUM_ACTION;
-  printf("qtabsize %d\n", (int)qtabSize);
-  initQtable<<<qtabSize / 64, 64>>>(qtable);
+  initQtable<<<1, 1>>>(qtable);
   cudaDeviceSynchronize();
   printQTable<<<1, 1>>>(qtable);
 }
