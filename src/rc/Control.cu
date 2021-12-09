@@ -58,7 +58,9 @@ __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   for (int i = 1; i <= NUM_STATES; i++) {
     if (avg <= stateSize * i) {
       states[tid] = i;
-      printf("current state for region %d is %d\nstateSize is %d and avg is %d\n", tid, i, stateSize*i, avg);
+      printf(
+          "current state for region %d is %d\nstateSize is %d and avg is %d\n",
+          tid, i, stateSize * i, avg);
       return;
     }
   }
@@ -119,6 +121,10 @@ __global__ void deviceAction(float *qtable, uint8_t *cstate, uint8_t *action,
   }
   printf("CurrAction: %d\ncurrMax: %f\n", *action, currMax);
   *action = currGuess;
+  if (currGuess == 0 && currMax == 0) {
+    printf("rolling random\n");
+    *action = (short)(rand * 3.99);
+  }
 }
 
 void agentAction(float *qtable, uint8_t *cstate, uint8_t *action,
