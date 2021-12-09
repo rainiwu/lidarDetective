@@ -7,7 +7,7 @@ int qtableAccessor(uint8_t *state) {
     }
     return qtableIndex * 4;
 }
-int max(int a, int b) {
+float max(float a, float b) {
     return (a > b) ? a : b;
 }
 
@@ -50,7 +50,15 @@ void agentUpdate(float *qtable, uint8_t *cstate, uint8_t *nstate, float *reward,
 void agentAction(float *qtable, uint8_t *cstate, uint8_t *action) {
     int qtableIndex = qtableAccessor(cstate);
     float currMax = qtable[qtableIndex];
-    for (int i = 0; i < 4)
+    uint8_t currGuess = 0;
+    for (int i = 0; i < 4; i++) {
+        newMax = max(currMax,qtable[qtableIndex + i]);
+        if (newMax > currMax) {
+            currMax = newMax;
+            currGuess = (uint8_t) i;
+        }
+    }
+    *action = currGuess;
 }
 
 __global__ void getReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
