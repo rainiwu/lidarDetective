@@ -1,5 +1,7 @@
 #include "rc/Control.cuh"
 #include <cstdio>
+#include <curand.h>
+#include <curand_kernel.h>
 
 // region number of values
 #define REG_NV (LIDAR_VALS / LIDAR_DIV) / NUM_REGIONS
@@ -10,6 +12,13 @@ __device__ int qtableAccessor(uint8_t *state) {
     qtableIndex += state[i] * (NUM_STATES ^ i);
   return qtableIndex * 4;
 }
+
+__global__ void init_randstate(curandState *state) {
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  curand_init(clock() + tid, tid, 0, &state[tid]);
+}
+
+void initrand(curandState *state) { init_randstate<<<1, 1>>>(state); }
 
 __device__ int myMax(int a, int b) { return (a > b) ? a : b; }
 
@@ -75,7 +84,17 @@ void agentUpdate(float *qtable, uint8_t *cstate, uint8_t *nstate, float *reward,
   deviceUpdate<<<1, 1>>>(qtable, cstate, nstate, reward, action);
 }
 
-__global__ void deviceAction(float *qtable, uint8_t *cstate, uint8_t *action) {
+__global__ void deviceAction(float *qtable, uint8_t *cstate, uint8_t *action,
+                             curandState *aState) {
+
+  // TODO: parallelize
+  float rand = curand_uniform(aState);
+  if (rand < EPSILON) {
+    rand = curand_uniform(aState);
+    *action = (short)(rand * 3.99);
+    return;
+  }
+
   int qtableIndex = qtableAccessor(cstate);
   float currMax = qtable[qtableIndex];
   int newMax = 0;
@@ -90,8 +109,9 @@ __global__ void deviceAction(float *qtable, uint8_t *cstate, uint8_t *action) {
   *action = currGuess;
 }
 
-void agentAction(float *qtable, uint8_t *cstate, uint8_t *action) {
-  deviceAction<<<1, 1>>>(qtable, cstate, action);
+void agentAction(float *qtable, uint8_t *cstate, uint8_t *action,
+                 curandState *astate) {
+  deviceAction<<<1, 1>>>(qtable, cstate, action, astate);
 }
 
 __global__ void getReward(uint8_t *cstate, uint8_t *nstate, float *reward) {

@@ -20,6 +20,8 @@ Control::Control() {
   hAction = new uint8_t;
   hLaserDat = (uint16_t *)malloc(sizeof(uint16_t) * LIDAR_VALS);
 
+  initrand(dRandState);
+
   if (QTAB_LOAD)
     loadQtable();
   else
@@ -63,7 +65,7 @@ void Control::control() {
     // transform myLidar data into state
     calcState(dLaserDat, dCState);
     // determine action based on QTable, cstate, and policy
-    agentAction(dQtable, dCState, dAction);
+    agentAction(dQtable, dCState, dAction, dRandState);
     cudaDeviceSynchronize();
     cudaMemcpy(hAction, dAction, sizeof(uint8_t), cudaMemcpyDeviceToHost);
     // execute action

@@ -31,6 +31,7 @@
 #define MAX_WING 2
 #define DISC_FACT 0.9     // discount factor
 #define LEARN_RATE_DIV 10 // learning rate divisor
+#define EPSILON 0.9
 
 // maximum lidar value
 #define LIDAR_MAX_V 2000
