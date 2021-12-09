@@ -22,13 +22,17 @@
 #define ROBOT_STRR 3 // steer right
 #define ROBOT_STRAIGHT 4
 #define ROBOT_STOP 5
-#define PWM_DELAY 250
+#define DELTA 1       // whether or not to use delta
+#define PWM_DELAY 100 // delay in milliseconds between each call
 
 // rl configuration
 #define NUM_REGIONS 1
-#define NUM_STATES 9
-#define CTR_STATE 5 // middle point of num states
-#define MAX_WING 2
+#define NUM_STATES 9 // keep at odd number!
+// number of states is not max state
+// e.g. NUM_STATES = 3, means states can be 0,1,2
+// middle is 1
+#define CTR_STATE NUM_STATES / 2 // middle point of num states
+
 #define DISC_FACT 0.9    // discount factor
 #define LEARN_RATE_DIV 0 // learning rate divisor
 #define EPSILON 0
