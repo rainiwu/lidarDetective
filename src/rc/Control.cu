@@ -31,7 +31,7 @@ __global__ void init_randstate(curandState *state) {
 
 void initrand(curandState *state) { init_randstate<<<1, 1>>>(state); }
 
-__device__ int myMax(float a, float b) { return (a > b) ? a : b; }
+__device__ float myMax(float a, float b) { return (a > b) ? a : b; }
 
 __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   // parallelized by region - tid is region num
