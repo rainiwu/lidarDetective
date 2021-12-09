@@ -172,6 +172,9 @@ __device__ bool iterateState(uint8_t *state, uint8_t targetIndex) {
 __global__ void initQtable(float *qtable) {
   uint8_t allstates[NUM_REGIONS];
   do {
+    for (int i = 0; i < NUM_ACTION; i++) {
+      qtable[qtableAccessor(allstates) + i] = 0;
+    }
     if (allstates[NUM_REGIONS / 2] > CTR_STATE) {
       qtable[qtableAccessor(allstates) + ROBOT_THUP] = 1;
       qtable[qtableAccessor(allstates) + ROBOT_THDN] = -1;
