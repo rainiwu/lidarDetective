@@ -13,6 +13,17 @@ __device__ int qtableAccessor(uint8_t *state) {
   return qtableIndex * 4;
 }
 
+__device__ void qtableDeacc(int index, uint8_t *outarray) {
+  for (int i = NUM_REGIONS - 1; i >= 0; i--) {
+    for (int j = NUM_STATES - 1; j >= 0; j--) {
+      if (index > j * (NUM_STATES ^ i)) {
+        index = index - (j * (NUM_STATES ^ i));
+        outarray[i] = j;
+      }
+    }
+  }
+}
+
 __global__ void init_randstate(curandState *state) {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
   curand_init(clock() + tid, tid, 0, &state[tid]);
@@ -146,6 +157,37 @@ void agentReward(uint8_t *cstate, uint8_t *nstate, float *reward) {
 
 __global__ void initQtable(float *qtable) {
   int tid = threadIdx.x + blockIdx.x * blockDim.x;
+  int stateindex = tid / 4;
+  int action = tid % 4;
+  uint8_t state[NUM_REGIONS];
+  qtableDeacc(stateindex, (uint8_t *)&state);
+  for (int i = 0; i < NUM_REGIONS; i++) {
+    if (state[i] < CTR_STATE) {
+      switch (action) {
+      case ROBOT_THUP:
+        qtable[tid] = -1;
+        return;
+      case ROBOT_THDN:
+        qtable[tid] = 1;
+        return;
+      default:
+        qtable[tid] = 0;
+        return;
+      }
+    } else if (state[i] > CTR_STATE) {
+      switch (action) {
+      case ROBOT_THUP:
+        qtable[tid] = 1;
+        return;
+      case ROBOT_THDN:
+        qtable[tid] = -1;
+        return;
+      default:
+        qtable[tid] = 0;
+        return;
+      }
+    }
+  }
   qtable[tid] = 0;
 }
 void initvals(float *qtable) {
