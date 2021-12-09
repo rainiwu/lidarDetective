@@ -196,15 +196,15 @@ __global__ void initQtable(float *qtable) {
   qtable[tid] = 0;
 }
 
-__global__ void printQTable(float* qtable){
+__global__ void printQTable(float *qtable) {
   for (int i = 0; i < pow(NUM_STATES, NUM_REGIONS) * NUM_ACTION; i++) {
     printf("%d: %f\n", i, qtable[i]);
   }
 }
 void initvals(float *qtable) {
   size_t qtabSize = pow(NUM_STATES, NUM_REGIONS) * NUM_ACTION;
-  printf("qtabsize %d\n", (int) qtabSize);
+  printf("qtabsize %d\n", (int)qtabSize);
   initQtable<<<qtabSize / 64, 64>>>(qtable);
-  printQTable<<<1,1>>>(qtable);
   cudaDeviceSynchronize();
+  printQTable<<<1, 1>>>(qtable);
 }
