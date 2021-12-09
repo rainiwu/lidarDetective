@@ -15,7 +15,7 @@
 #define STEERING_PIN 1
 
 // rl algo actions
-#define NUM_ACTION 2 // only first four actions used
+#define NUM_ACTION 4 // only first four actions used
 #define ROBOT_THUP 0 // throttle up
 #define ROBOT_THDN 1 // throttle down
 #define ROBOT_STRL 2 // steer left
@@ -29,7 +29,7 @@
 #define NUM_STATES 9
 #define CTR_STATE 5 // middle point of num states
 #define MAX_WING 2
-#define DISC_FACT 0.9     // discount factor
+#define DISC_FACT 0.9    // discount factor
 #define LEARN_RATE_DIV 0 // learning rate divisor
 #define EPSILON 0
 
