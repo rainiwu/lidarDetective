@@ -182,11 +182,11 @@ __global__ void initQtable(float *qtable) {
       qtable[qtableAccessor(allstates) + ROBOT_THUP] = -1;
       qtable[qtableAccessor(allstates) + ROBOT_THDN] = 1;
     }
-    if (allstates[(NUM_REGIONS / 2) - 1] < allstates[(NUM_REGIONS / 2)]) {
+    if (abs(allstates[(NUM_REGIONS / 2) - 1] - CTR_STATE) < abs(allstates[(NUM_REGIONS / 2)] - CTR_STATE)) {
       qtable[qtableAccessor(allstates) + ROBOT_STRL] = BIAS_MULT * 1;
       qtable[qtableAccessor(allstates) + ROBOT_STRR] = BIAS_MULT * -1;
-    } else if (allstates[(NUM_REGIONS / 2) - 1] >
-               allstates[(NUM_REGIONS / 2)]) {
+    } else if (abs(allstates[(NUM_REGIONS / 2) - 1] - CTR_STATE) >
+               abs(allstates[(NUM_REGIONS / 2)] - CTR_STATE)) {
       qtable[qtableAccessor(allstates) + ROBOT_STRL] = BIAS_MULT * -1;
       qtable[qtableAccessor(allstates) + ROBOT_STRR] = BIAS_MULT * 1;
     }

@@ -3,7 +3,7 @@
 namespace LiDet {
 
 Robot::Robot() {
-  throtStop();
+  throtUp();
   steerStraight();
 }
 

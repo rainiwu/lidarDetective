@@ -2,7 +2,7 @@
 #define Common_h
 
 #define CONSTANT 30
-#define CONF_THRESH 100
+#define CONF_THRESH 10
 
 // pwm values
 #define THROTTLE_NEUTRAL 350
@@ -49,7 +49,7 @@
 // divisor describing number of divs
 #define LIDAR_DIV 8
 // location of follow target
-#define LIDAR_CENT 180
+#define LIDAR_CENT 205
 
 // qtable options
 #define QTAB_SAVE 1 // save qtable on exit?
