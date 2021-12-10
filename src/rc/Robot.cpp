@@ -22,10 +22,18 @@ void Robot::operator()(uint8_t action) {
     throtDn();
     break;
   case ROBOT_STRL:
-    steerLf();
+    if (myDrive.getThrottle() < 0) {
+      steerRi();
+    } else {
+      steerLf();
+    }
     break;
   case ROBOT_STRR:
-    steerRi();
+    if (myDrive.getThrottle() < 0) {
+      steerLf();
+    } else {
+      steerRi();
+    }
     break;
   case ROBOT_STRAIGHT:
     steerStraight();
