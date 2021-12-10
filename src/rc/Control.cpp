@@ -65,7 +65,7 @@ void Control::stop() {
 void Control::control() {
   while (false == stopFlag) {
     // get data from myLidar
-    myLidar.graph(std::cout);
+    // myLidar.graph(std::cout);
     cudaMemcpy(dLaserDat, &myLidar.getData()[LIDAR_CENT],
                sizeof(uint16_t) * (LIDAR_VALS / LIDAR_DIV),
                cudaMemcpyHostToDevice);
@@ -77,8 +77,7 @@ void Control::control() {
     cudaDeviceSynchronize();
     cudaMemcpy(hAction, dAction, sizeof(uint8_t), cudaMemcpyDeviceToHost);
     // execute action
-    // if (*hAction != ROBOT_STRR || *hAction != ROBOT_STRL)
-      // myRobot(ROBOT_STRAIGHT);
+    std::cout << "Action: " << *hAction << "\n";
     myRobot(*hAction);
 
     // determine next state

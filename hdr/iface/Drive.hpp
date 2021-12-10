@@ -4,6 +4,8 @@
 #include "Common.h"
 #include "dep/JHPWMPCA9685.h"
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 namespace LiDet {
 class Drive {

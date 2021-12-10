@@ -40,29 +40,39 @@ void Robot::operator()(uint8_t action) {
 }
 
 void Robot::throtUp() {
-  if (DELTA)
-    myDrive.setThrottle(myDrive.getThrottle() + delta_throt);
-  else
+  if (DELTA) {
+    float newThrot = myDrive.getThrottle() + delta_throt;
+    if (newThrot > -0.6 && newThrot < 0.6) {
+      newThrot = 0.6;
+    }
+    myDrive.setThrottle(newThrot);
+  } else {
     myDrive.setThrottle(0.6);
+  }
 }
 void Robot::throtDn() {
-  if (DELTA)
-    myDrive.setThrottle(myDrive.getThrottle() - delta_throt);
-  else
+  if (DELTA) {
+    float newThrot = myDrive.getThrottle() - delta_throt;
+    if (newThrot < 0.6 && newThrot > -0.6) {
+      newThrot = -0.6;
+    }
+    myDrive.setThrottle(newThrot);
+  } else {
     myDrive.setThrottle(-0.6);
+  }
 }
 void Robot::steerLf() {
   // std::cout << "Turning left\n";
-  // if (DELTA)
-    // myDrive.setSteering(myDrive.getSteering() + delta_steer);
-  // else
+  if (DELTA)
+    myDrive.setSteering(myDrive.getSteering() + delta_steer);
+  else
     myDrive.setSteering(-0.4);
 }
 void Robot::steerRi() {
   // std::cout << "Turning right\n";
-  // if (DELTA)
-    // myDrive.setSteering(myDrive.getSteering() - delta_steer);
-  // else
+  if (DELTA)
+    myDrive.setSteering(myDrive.getSteering() - delta_steer);
+  else
     myDrive.setSteering(0.3);
 }
 void Robot::throtStop() { myDrive.setThrottle(0); }

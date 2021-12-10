@@ -14,7 +14,7 @@
 #define THROTTLE_PIN 2
 #define STEERING_PIN 1
 
-#define BIAS_MULT 10
+#define BIAS_MULT 1
 
 // rl algo actions
 #define NUM_ACTION 4 // only first four actions used
@@ -24,13 +24,13 @@
 #define ROBOT_STRR 3 // steer right
 #define ROBOT_STRAIGHT 4
 #define ROBOT_STOP 5
-#define DELTA 0       // whether or not to use delta
-#define THR_DELT 0.002 // throttle delta values
-#define STR_DELT 0.3 // steering delta
+#define DELTA 1       // whether or not to use delta
+#define THR_DELT 0.1 // throttle delta values
+#define STR_DELT 0.1 // steering delta
 #define PWM_DELAY 10 // delay in milliseconds between each call
 
 // rl configuration
-#define NUM_REGIONS 9 // keep at odd number!
+#define NUM_REGIONS 3 // keep at odd number!
 #define NUM_STATES 9  // keep at odd number!
 // number of states is not max state
 // e.g. NUM_STATES = 3, means states can be 0,1,2
@@ -42,14 +42,14 @@
 #define EPSILON 0
 
 // maximum lidar value
-#define LIDAR_MAX_V 4000
+#define LIDAR_MAX_V 10000
 // target lidar value
-#define LIDAR_TGT_V 2000
+#define LIDAR_TGT_V 5000
 #define LIDAR_VALS 1080
 // divisor describing number of divs
-#define LIDAR_DIV 4
+#define LIDAR_DIV 8
 // location of follow target
-#define LIDAR_CENT 135
+#define LIDAR_CENT 180
 
 // qtable options
 #define QTAB_SAVE 1 // save qtable on exit?

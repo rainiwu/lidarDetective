@@ -21,7 +21,7 @@ Drive::~Drive() {
 }
 
 void Drive::setThrottle(const float &aValue) {
-  // std::cout << "Throttle: " << aValue << "\n";
+  std::cout << "Throttle: " << aValue << "\n";
   if (aValue < -1.0 || aValue > 1.0) {
     return;
   }
@@ -35,7 +35,9 @@ void Drive::setThrottle(const float &aValue) {
     int pwmValue = THROTTLE_NEUTRAL +
                    (int)(aValue * (float)(THROTTLE_FORWARD - THROTTLE_NEUTRAL));
     pca9685->setPWM(THROTTLE_PIN, 0, pwmValue);
+    std::this_thread::sleep_for(std::chrono::milliseconds{PWM_DELAY});
     pca9685->setPWM(THROTTLE_PIN, 0, THROTTLE_NEUTRAL);
+    std::this_thread::sleep_for(std::chrono::milliseconds{PWM_DELAY});
     pca9685->setPWM(THROTTLE_PIN, 0, pwmValue);
 
   } else { // stopped
