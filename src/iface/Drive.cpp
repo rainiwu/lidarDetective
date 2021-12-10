@@ -21,7 +21,7 @@ Drive::~Drive() {
 }
 
 void Drive::setThrottle(const float &aValue) {
-  std::cout << "Throttle: " << aValue << "\n";
+  // std::cout << "Throttle: " << aValue << "\n";
   if (aValue < -1.0 || aValue > 1.0) {
     return;
   }
@@ -30,12 +30,10 @@ void Drive::setThrottle(const float &aValue) {
   if (aValue > 0) { // forward
     int pwmValue = THROTTLE_NEUTRAL +
                    (int)(aValue * (float)(THROTTLE_FORWARD - THROTTLE_NEUTRAL));
-    std::cout << pwmValue << "\n";
     pca9685->setPWM(THROTTLE_PIN, 0, pwmValue);
   } else if (aValue < 0) { // reverse
     int pwmValue = THROTTLE_NEUTRAL +
                    (int)(aValue * (float)(THROTTLE_FORWARD - THROTTLE_NEUTRAL));
-    std::cout << pwmValue << "\n";
     pca9685->setPWM(THROTTLE_PIN, 0, pwmValue);
     pca9685->setPWM(THROTTLE_PIN, 0, THROTTLE_NEUTRAL);
     pca9685->setPWM(THROTTLE_PIN, 0, pwmValue);
@@ -55,12 +53,12 @@ void Drive::setSteering(const float &aValue) {
   if (aValue > 0) { // right
     int pwmValue = STEERING_NEUTRAL +
                    (int)(aValue * (float)(STEERING_RIGHT - STEERING_NEUTRAL));
-    std::cout << pwmValue << "\n";
+    // std::cout << pwmValue << "\n";
     pca9685->setPWM(STEERING_PIN, 0, pwmValue);
   } else if (aValue < 0) { // left
     int pwmValue = STEERING_NEUTRAL +
                    (int)(aValue * (float)(STEERING_RIGHT - STEERING_NEUTRAL));
-    std::cout << pwmValue << "\n";
+    // std::cout << pwmValue << "\n";
     pca9685->setPWM(STEERING_PIN, 0, pwmValue);
 
   } else { // straight

@@ -8,6 +8,7 @@ Robot::Robot() {
 }
 
 Robot::~Robot() {
+  std::cout << "Should be stopping\n";
   throtStop();
   steerStraight();
 }
@@ -42,19 +43,27 @@ void Robot::throtUp() {
   if (DELTA)
     myDrive.setThrottle(myDrive.getThrottle() + delta_throt);
   else
-    myDrive.setThrottle(0.2);
+    myDrive.setThrottle(0.6);
 }
 void Robot::throtDn() {
   if (DELTA)
     myDrive.setThrottle(myDrive.getThrottle() - delta_throt);
   else
-    myDrive.setThrottle(-0.2);
+    myDrive.setThrottle(-0.6);
 }
 void Robot::steerLf() {
-  myDrive.setSteering(myDrive.getSteering() + delta_steer);
+  // std::cout << "Turning left\n";
+  // if (DELTA)
+    // myDrive.setSteering(myDrive.getSteering() + delta_steer);
+  // else
+    myDrive.setSteering(-0.4);
 }
 void Robot::steerRi() {
-  myDrive.setSteering(myDrive.getSteering() - delta_steer);
+  // std::cout << "Turning right\n";
+  // if (DELTA)
+    // myDrive.setSteering(myDrive.getSteering() - delta_steer);
+  // else
+    myDrive.setSteering(0.3);
 }
 void Robot::throtStop() { myDrive.setThrottle(0); }
 void Robot::steerStraight() { myDrive.setSteering(0); }

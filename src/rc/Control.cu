@@ -47,9 +47,9 @@ __global__ void findState(uint16_t *laserDat, uint8_t *states) {
   for (int i = 1; i <= NUM_STATES; i++) {
     if (avg <= stateSize * i) {
       states[tid] = i - 1;
-      printf(
-          "current state for region %d is %d\nstateSize is %d and avg is %d\n",
-          tid, i, stateSize * i, avg);
+      //printf(
+      //    "current state for region %d is %d\nstateSize is %d and avg is %d\n",
+      //    tid, i, stateSize * i, avg);
       return;
     }
   }
@@ -108,11 +108,11 @@ __global__ void deviceAction(float *qtable, uint8_t *cstate, uint8_t *action,
       currGuess = (uint8_t)i;
     }
   }
-  printf("CurrAction: %d\ncurrMax: %f\n", *action, currMax);
+  //printf("CurrAction: %d\ncurrMax: %f\n", *action, currMax);
   *action = currGuess;
   if (currGuess == 0 && currMax == 0) {
-    printf("rolling random\n");
     *action = (short)(rand * 3.99);
+    //printf("rolling random%d\n", (int) *action);
   }
 }
 
@@ -181,6 +181,13 @@ __global__ void initQtable(float *qtable) {
     } else if (allstates[NUM_REGIONS / 2] < CTR_STATE) {
       qtable[qtableAccessor(allstates) + ROBOT_THUP] = -1;
       qtable[qtableAccessor(allstates) + ROBOT_THDN] = 1;
+    }
+    if (allstates[CTR_STATE - 1] < allstates[CTR_STATE]) {
+      qtable[qtableAccessor(allstates) + ROBOT_STRL] = BIAS_MULT * 1;
+      qtable[qtableAccessor(allstates) + ROBOT_STRR] = BIAS_MULT * -1;
+    } else if (allstates[CTR_STATE + 1] > allstates[CTR_STATE]) {
+      qtable[qtableAccessor(allstates) + ROBOT_STRL] = BIAS_MULT * -1;
+      qtable[qtableAccessor(allstates) + ROBOT_STRR] = BIAS_MULT * 1;
     }
   } while (iterateState(allstates, 0) != true);
 }
