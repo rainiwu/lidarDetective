@@ -2,6 +2,10 @@
 
 > Autonomous vehicle behaviors using object detection with LIDAR
 
+Take a look at a more detailed article here about this project: https://guitar.ucsd.edu/maeece148/index.php/2021FallTeam2
+
+LIDAR Detective is a reinforcement learning system for LiDAR-based autonomous navigation built from scratch for the CUDA-enabled Jetson Nano SBC. By utilizing the CUDA cores found on the Jetson Nano, adaptive autonomous behavior can be enabled with a real-time 100Hz steering control loop. The result is a blazingly fast intelligent control system enabling obstacle avoidance, target following, and other behaviors using a single low-cost LiDAR sensor. 
+
 ## File Structure
 * `hdr` - Header files
 * `src` - Source files
